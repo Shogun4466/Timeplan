@@ -1,0 +1,28 @@
+h1{
+    text-align: center;
+    
+}
+
+h2{
+    text-align: center;
+}
+.form1{
+    background-color: white;
+    margin: 0 auto 100px;
+    max-width: 380px;
+    border-radius: 25px;
+    padding: 24px;
+    position: relative;
+    box-shadow: 10px 10px 5px #333333;
+    top: 50px;
+    text-align:center;
+}
+
+.form2{
+    background-color: lightgrey;
+    
+}
+
+body {
+   background-color: lightgrey;
+}
