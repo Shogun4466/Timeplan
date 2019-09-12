@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.String;
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
@@ -16,17 +18,33 @@ import java.util.Scanner;
  */
 public class Reader {
 
-    public Reader() throws Exception {
-        
+    ArrayList table;
+    ArrayList firstRow;
+
+    public Reader(String filSted) throws FileNotFoundException {
+        File f = new File(filSted);
+        try (Scanner scn = new Scanner(f)) {
+            table = new ArrayList();
+            firstRow = new ArrayList();
+            firstRow.add(scn.nextLine());
+            scn.useDelimiter(",");
+            while (scn.hasNext()) {
+                table.add(scn.next());
+            }
+        }
     }
 
-    void reader() throws FileNotFoundException {
-        File f = new File ("C:/Users/Sondre/Dropbox/IT og informasjonssystemer/Praksisplass/Studieprogram_data_testUttrekk.csv");
-        try (Scanner scn = new Scanner(f)) {
-            scn.useDelimiter(",");
-            while(scn.hasNext())    {
-                System.out.print(scn.next()+"        ");
-            }
+    void printRow1() {
+        Iterator it = firstRow.iterator();
+        while (it.hasNext()) {
+            System.out.print(it.next());
+        }
+    }
+
+    void printTabell() {
+        Iterator it = table.iterator();
+        while (it.hasNext()) {
+            System.out.print(it.next());
         }
     }
 }

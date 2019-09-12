@@ -2,14 +2,15 @@ package timeplan;
 
 import java.io.File;
 import java.lang.String;
+import java.util.ArrayList;
 import java.util.Scanner;
     
 public class Timeplan {
 
     public static void main(String[] args) throws Exception {
-        Reader rdr = new Reader();
-        
-        rdr.reader();
+        Reader rdr = new Reader("C:/Users/Sondre/Dropbox/IT og informasjonssystemer/Praksisplass/Studieprogram_data_testUttrekk.csv");
+        rdr.printRow1();
+        rdr.printTabell();
     }
 }
 
