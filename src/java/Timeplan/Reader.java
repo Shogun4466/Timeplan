@@ -8,9 +8,13 @@ package Timeplan;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.String;
+import java.sql.ResultSet;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Iterator;
+import Database.Query;
+import java.util.List;
+import java.util.Arrays;
 
 /**
  *
@@ -19,24 +23,45 @@ import java.util.Iterator;
 public class Reader {
 
     ArrayList table;
-    ArrayList firstRow;
+    List firstRow;
+    int antKoll;
+    int antRader;
 
     public Reader(String filSted) throws FileNotFoundException {
         if (filSted.contains(".csv")) {
             File f = new File(filSted);
             try (Scanner scn = new Scanner(f)) {
                 table = new ArrayList();
-                firstRow = new ArrayList();
-                firstRow.add(scn.nextLine());
-                scn.useDelimiter(",");
+                String rad = scn.nextLine();
+                String str[] = rad.split(",");
+                List<String> firstRow = new ArrayList<String>();
+                firstRow = Arrays.asList(str);
+                //firstRow.add(al);
+                Iterator it = firstRow.iterator();
+                antKoll = 0;
+                while (it.hasNext()) {
+                    antKoll++;
+                    it.next();
+                }
                 while (scn.hasNext()) {
                     table.add(scn.next());
+                    antRader++;
                 }
+                System.out.println("Antall rader: " +antRader);
+                System.out.println("Ant kollonner: "+antKoll);
             }
         }
         else    {
-            System.out.println("Whoops. Feil filtype. Prøv igjen.");
+            System.out.println("Whoops. Feil filtype. Prøv igjen. Eventuelt spør utvikler pent om å legge til støtte for denne filtypen.");
         }
+    }
+    
+    void insertExcelDatabase(int antRader)  {
+        int i = 0;
+        ArrayList Studieprogram = new ArrayList();
+        
+        Query query = new Query();
+        query.update("insert into "+firstRow.get(0)+" value ("+table.get(0)+")");
     }
 
     void printRow1() {
