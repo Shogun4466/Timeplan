@@ -36,7 +36,6 @@ public class Reader {
                 String str[] = rad.split(",");
                 List<String> firstRow = new ArrayList<String>();
                 firstRow = Arrays.asList(str);
-                //firstRow.add(al);
                 Iterator it = firstRow.iterator();
                 antKoll = 0;
                 while (it.hasNext()) {
