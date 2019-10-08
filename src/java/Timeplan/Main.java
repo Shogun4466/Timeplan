@@ -22,7 +22,8 @@ import javax.servlet.http.HttpSession;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        Reader rdr = new Reader("C:/Users/Sondre/Dropbox/IT og informasjonssystemer/Praksisplass/Studieprogram_data_testUttrekk.csv");
+        Reader rdr = new Reader();
+        rdr.readExcel("C:/Users/Sondre/Dropbox/IT og informasjonssystemer/IS-302 Praksisplass/Studieprogram_data_testUttrekk.csv");
         /*rdr.printRow1();
         rdr.printTabell();*/
         /*Query query = new Query();
