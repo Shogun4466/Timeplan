@@ -22,29 +22,72 @@ import java.util.Arrays;
  */
 public class Reader {
 
-    ArrayList table;
+    List table0;
+    List table1;
+    List table2;
+    List table3;
+    List table4;
+    List table8;
+    List table9;
+    List table10;
+    List table11;
+    List table12;
+    List table13;
+    
     List firstRow;
     int antKoll;
     int antRader;
+    int tot;
 
-    public Reader(String filSted) throws FileNotFoundException {
+    public Reader(){
+    }
+    
+    void readExcel (String filSted) throws FileNotFoundException    {
         if (filSted.contains(".csv")) {
             File f = new File(filSted);
             try (Scanner scn = new Scanner(f)) {
-                table = new ArrayList();
-                String rad = scn.nextLine();
-                String str[] = rad.split(",");
-                List<String> firstRow = new ArrayList<String>();
-                firstRow = Arrays.asList(str);
+                int i = 0;
+                ArrayList<String> tables[]=new ArrayList[i];
+                while (scn.hasNextLine())   {
+                    String rad = scn.nextLine();
+                    String str[] = rad.split(",");
+                    tables[i]=new ArrayList<String>();
+                    firstRow = Arrays.asList(str);
+                    i++;
+                }
+                /*int i = 0;
+                while (scn.hasNextLine()) {
+                    String rad = scn.nextLine();
+                    String str[] = rad.split(",");
+                    List<String> firstRow = new ArrayList<String>();
+                    firstRow = Arrays.asList(str);
+                    i++;
+                }*/
                 Iterator it = firstRow.iterator();
                 antKoll = 0;
                 while (it.hasNext()) {
                     antKoll++;
                     it.next();
                 }
+                i = 0;
+                while (i<antKoll)   {
+                    
+                }
                 while (scn.hasNext()) {
-                    table.add(scn.next());
-                    antRader++;
+                    if (i!=5 && i<antKoll)  {
+                        tables[i].add(scn.next());
+                        i++;
+                    }
+                    System.out.println(antRader);
+                    if (i == 5 && i<antKoll)  {
+                        //table5.add(scn.next());
+                        System.out.println(scn.next());
+                        i=i+3;
+                    }
+                    if (i==antKoll)   {
+                        antRader++;
+                        i=0;
+                    }
                 }
                 System.out.println("Antall rader: " +antRader);
                 System.out.println("Ant kollonner: "+antKoll);
@@ -55,14 +98,53 @@ public class Reader {
         }
     }
     
-    void insertExcelDatabase(int antRader)  {
-        int i = 0;
-        ArrayList Studieprogram = new ArrayList();
+    void readDatabase() {
+        
+    }
+    
+    /*void insertExcelDatabase(int antRader)  {
+        int tot = 0;
+        int t = 0;
         
         Query query = new Query();
-        query.update("insert into "+firstRow.get(0)+" value ("+table.get(0)+")");
+        
+        
+        if (i == 0 && i<antKoll) {  //koll 1
+            
+        }
+        if (i == 0 && i<antKoll) {
+            
+        }
+        if (i == 0 && i<antKoll) {
+            
+        }
+        if (i == 0 && i<antKoll) {
+            
+        }
+        if (i == 0 && i<antKoll) {
+            
+        }
+        if (i == 0 && i<antKoll) {
+            
+        }
+        if (i == 0 && i<antKoll) {
+            
+        }
+        if (i == 0 && i<antKoll) {
+            
+        }
+        if (i == 0 && i<antKoll) {
+            
+        }
+        if (i == 0 && i<antKoll) {
+            
+        }
+        if (antKoll == i && tot < antRader)   {   //Ny rad
+            i=0;
+        }
+        
     }
-
+*/
     void printRow1() {
         Iterator it = firstRow.iterator();
         while (it.hasNext()) {
@@ -70,10 +152,10 @@ public class Reader {
         }
     }
 
-    void printTabell() {
+    /*void printTabell() {
         Iterator it = table.iterator();
         while (it.hasNext()) {
             System.out.print(it.next());
         }
-    }
+    }*/
 }
