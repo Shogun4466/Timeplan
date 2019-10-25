@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.*;
+import java.sql.BatchUpdateException;
+import java.sql.DatabaseMetaData;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -23,7 +25,13 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         Reader rdr = new Reader();
-        rdr.readExcel("C:/Users/Sondre/Dropbox/IT og informasjonssystemer/IS-302 Praksisplass/Studieprogram_data_testUttrekk.csv");
+        rdr.readExcel("C:/Users/Sondre/Dropbox/IT og informasjonssystemer/IS-302 Praksisplass/Emne_data_TestUttrekk.csv");
+        Query query = new Query();
+        //query.update("INSERT INTO `Emnekode m/versjon` VALUES ('objekt2');");
+        rdr.insertExcelDatabase(query);
+        //rdr.executeBatch(query);
+        //rdr.executeBatch(query);
+        //System.out.println("REEEE: "+rs.getString(1));
         /*rdr.printRow1();
         rdr.printTabell();*/
         /*Query query = new Query();

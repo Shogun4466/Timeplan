@@ -13,31 +13,29 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Iterator;
 import Database.Query;
+import java.sql.BatchUpdateException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Arrays;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.*;
 /**
  *
  * @author Sondre
  */
 public class Reader {
-
-    List table0;
-    List table1;
-    List table2;
-    List table3;
-    List table4;
-    List table8;
-    List table9;
-    List table10;
-    List table11;
-    List table12;
-    List table13;
     
-    List firstRow;
+    //List firstRow;
+    ArrayList<ArrayList<String>> listeUtifraKoll;
+    ArrayList listOfCells;
+    List<String> csvFRad;
     int antKoll;
     int antRader;
-    int tot;
+    int antElementer;
+    int j;
+    int i;
+    int x;
 
     public Reader(){
     }
@@ -46,110 +44,145 @@ public class Reader {
         if (filSted.contains(".csv")) {
             File f = new File(filSted);
             try (Scanner scn = new Scanner(f)) {
-                int i = 0;
-                ArrayList<String> tables[]=new ArrayList[i];
-                while (scn.hasNextLine())   {
-                    String rad = scn.nextLine();
-                    String str[] = rad.split(",");
-                    tables[i]=new ArrayList<String>();
-                    firstRow = Arrays.asList(str);
-                    i++;
-                }
-                /*int i = 0;
-                while (scn.hasNextLine()) {
-                    String rad = scn.nextLine();
-                    String str[] = rad.split(",");
-                    List<String> firstRow = new ArrayList<String>();
-                    firstRow = Arrays.asList(str);
-                    i++;
-                }*/
-                Iterator it = firstRow.iterator();
-                antKoll = 0;
-                while (it.hasNext()) {
-                    antKoll++;
-                    it.next();
-                }
                 i = 0;
-                while (i<antKoll)   {
-                    
+                //tables=new ArrayList[i];
+                String fRad = scn.nextLine();   //Gir første rad
+                System.out.println(fRad);       //Dobbeltsjekker i output
+                //Separerer utifra komma, setter første rad inn i en egen arraylist
+                String[] csvFCeller = fRad.split(",");
+                csvFRad = Arrays.asList(csvFCeller);
+                /*for (i=0; i < antKoll; i++) {
+                    Object element = csvFRad.get(i);
+                    String elementString = element.toString();
+                    firstRow.add(elementString);
+                }*/
+                //firstRow = new ArrayList(csvFRad);
+                antKoll = csvFRad.size();
+                System.out.println("antall kollonner: "+antKoll);
+                //String alleRader = "";          //Initsierer utenfor while-løkken
+                ArrayList alleRaderAL = new ArrayList();
+                while (scn.hasNext())   {   
+                    alleRaderAL.add(scn.next());
+                    //alleRader = alleRader.concat(scn.nextLine());
+                    //String rad = scn.nextLine();
+                    //String str[] = rad.split(",");
+                    //List<String> tables[i] = Arrays.asList(str);
+                    //tables[i]=new ArrayList<String>();
+                    antRader++;
                 }
-                while (scn.hasNext()) {
-                    if (i!=5 && i<antKoll)  {
-                        tables[i].add(scn.next());
-                        i++;
-                    }
-                    System.out.println(antRader);
-                    if (i == 5 && i<antKoll)  {
-                        //table5.add(scn.next());
-                        System.out.println(scn.next());
-                        i=i+3;
-                    }
-                    if (i==antKoll)   {
-                        antRader++;
-                        i=0;
+                //alleRader inneholder nå hele .csv listen som en String.
+                String a = alleRaderAL.toString();  //DENNE SKAPER PROBLEMET PÅ START OG SLUTT
+                String alleRader = a.replaceAll("]$","");   //FUNGERER FOR SISTE, MEN IKKE FØRSTE. REEEEE.
+                System.out.println("Reeee: "+ alleRader);  //Dobbelsjekk
+                System.out.println("antall rader: "+ antRader); //Trippelsjekk
+                //Separerer utifra komma, setter alle cellene i tabellen inn i arraylist
+                String[] csvCeller = alleRader.split(",");
+                List<String> csvCells = Arrays.asList(csvCeller);
+                listOfCells = new ArrayList(csvCells);
+                
+                //Sjekker om alt ser ut som det skal
+                System.out.println("Listen: " + listOfCells);
+                System.out.println("Ant elementer: " + listOfCells.size());
+                antElementer = listOfCells.size();
+                //String [] excelString = csv.split(",");
+                
+                //Lager antall kollonner mengde med arraylister inn i en overliggende arraylist.
+                listeUtifraKoll = new ArrayList<>(antKoll);
+                System.out.println("Vi har laget: " + antKoll + " antall arraylists i listeUtifraKoll");
+                i=0;
+                //Lager antKoll mengder arraylists i listeUtifraKoll
+                for (i=0; i < antKoll; i++)   {
+                    listeUtifraKoll.add(new ArrayList());
+                }
+                System.out.println("Dobbelsjekk at tallet over stemmer med dette: "+listeUtifraKoll.size());
+                System.out.println("Hva er på plass 12?" +listOfCells.get(12));
+                System.out.println("Hei, vi begynner herved innsetting. Vennligst vent.");
+                x = 0;
+                /*Itererer gjennom original liste og legger inn i arraylist(for j) inni en arraylist (for i).
+                For å visualisere; betyr dette at første for løkken tar for seg hele excel arket.
+                Andre løkken tar for seg hver kolonne. Etter hver gang andre løkke er ferdig med en kolonne, øker x med 1 for å gå videre til neste kollonne.
+                While løkken er for å forsikre om at for løkken ikke itererer gjennom flere celler enn de som finnes i excel arket.*/
+                while (x < antKoll) {
+                    for (i=0; i < antKoll; i++)    {
+                        for (j=x; j < antElementer; j=j+antKoll)    {
+                            Object element = listOfCells.get(j);
+                            String elementString = element.toString();
+                            listeUtifraKoll.get(x).add(elementString);
+                        }
+                        x++;
                     }
                 }
-                System.out.println("Antall rader: " +antRader);
-                System.out.println("Ant kollonner: "+antKoll);
-            }
+                System.out.println("Innsetting ferdig. Takk for at du ventet. ");
+                /*listeUtifraKoll.get(0) betyr å hente kollonne 0 (a). 2 vil tilsvare C osv.
+                .get(0).get(i) betyr å hente i fra kollonne 0 fra plass i i listen; i dette tilfelle iterere videre 
+                i listen frem til kondisjonen i midten av løkken er møtt.*/
+                for (i=0; i<5; i++)    {   //erstatt i<5 med antRader for hele listen
+                    System.out.println(listeUtifraKoll.get(0).get(i));
+                    System.out.println(listeUtifraKoll.get(2).get(i));
+                    System.out.println(listeUtifraKoll.get(9).get(i));
+                }
+                }
         }
         else    {
             System.out.println("Whoops. Feil filtype. Prøv igjen. Eventuelt spør utvikler pent om å legge til støtte for denne filtypen.");
         }
     }
     
-    void readDatabase() {
-        
+    void readDatabase(Query query) {
+         //Videre til å sette inn i databasen.
+         /*
+                while(listOfCells.contains(i))  {
+                    query.update
+                }*/
     }
     
-    /*void insertExcelDatabase(int antRader)  {
-        int tot = 0;
-        int t = 0;
-        
-        Query query = new Query();
-        
-        
-        if (i == 0 && i<antKoll) {  //koll 1
-            
+    void insertExcelDatabase(Query query) throws SQLException  {
+        try {
+        //x=0;
+        int y=0;
+        String objekter;
+        String table;
+        System.out.println("Antall rader: "+antRader+" og antall kolonner: "+antKoll+" og antall elementer: "+antElementer);
+        //while (x < antElementer) {
+            for (i=0; i < antKoll; i++)    {
+                System.out.println("Begynner på rad: "+i);
+                for (j=0; j < antRader; j++)    {
+                    //HVIS DET ER FØRSTE RAD, SÅ MÅ VI LEGGE TING TIL PÅ EN LITT DUM MÅTE FORELØBIG:
+                    if (i==0)   {
+                    String emnekode = listeUtifraKoll.get(i).get(j);
+                    //String emnekombkomb = listeUtifraKoll.get(i+1).get(j)+j;
+                    String emnekombkomb = "emnekomb:"+j;
+                    table = csvFRad.get(i);
+                    query.addBatchEmnekode(emnekode, emnekombkomb, table);
+                    y++;
+                    System.out.println("Sucess nr: " + y);
+                    }   
+                    //HVIS DET IKKE ER FØRSTE RADEN:
+                    else    {
+                    objekter = listeUtifraKoll.get(i).get(j);
+                    table = csvFRad.get(i);
+                    query.addBatch(objekter, table);
+                    //query.executeBatch();
+                    y++;
+                    System.out.println("Sucess nr: " + y);
+                    }
+                }
+                query.executeBatch();
+                System.out.println("Execution complete kolonne: "+i);
+                if (i==0)   {
+                    i=6;
+                }
+                //x++;
+           // }
         }
-        if (i == 0 && i<antKoll) {
-            
+        System.out.println("Fiks feri");
+        } catch (BatchUpdateException ex) {
+            Logger.getLogger(Reader.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (i == 0 && i<antKoll) {
-            
-        }
-        if (i == 0 && i<antKoll) {
-            
-        }
-        if (i == 0 && i<antKoll) {
-            
-        }
-        if (i == 0 && i<antKoll) {
-            
-        }
-        if (i == 0 && i<antKoll) {
-            
-        }
-        if (i == 0 && i<antKoll) {
-            
-        }
-        if (i == 0 && i<antKoll) {
-            
-        }
-        if (i == 0 && i<antKoll) {
-            
-        }
-        if (antKoll == i && tot < antRader)   {   //Ny rad
-            i=0;
-        }
-        
     }
-*/
-    void printRow1() {
-        Iterator it = firstRow.iterator();
-        while (it.hasNext()) {
-            System.out.print(it.next());
-        }
+    
+    void executeBatch(Query query) {
+        query.executeBatch();
     }
 
     /*void printTabell() {
