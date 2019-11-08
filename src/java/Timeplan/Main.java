@@ -27,9 +27,15 @@ public class Main {
         Reader rdr = new Reader();
         rdr.readExcel("C:/Users/Sondre/Dropbox/IT og informasjonssystemer/IS-302 Praksisplass/Emne_data_TestUttrekk.csv");
         Query query = new Query();
-        //query.update("INSERT INTO `Emnekode m/versjon` VALUES ('objekt2');");
+        /*query.update("INSERT INTO `Emnekode m/versjon` VALUES ('objekt2');"
+                + "INSERT INTO `Emnekomb nivå 2` VALUES ('emnekombkomb', 'emnekombniv2');");
+        */
         rdr.insertExcelDatabase(query);
-        //rdr.executeBatch(query);
+        rdr.executeBatch(query);
+        ResultSet rs = query.query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='timeplan';");
+        rs.next();
+        System.out.println(rs.getString(1));
+        query.close();
         //rdr.executeBatch(query);
         //System.out.println("REEEE: "+rs.getString(1));
         /*rdr.printRow1();

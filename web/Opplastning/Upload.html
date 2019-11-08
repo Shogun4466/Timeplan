@@ -1,23 +1,56 @@
 <html>
-    <head>
-        <title>Welcome to Schedule</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="Timeplan.css"/>
+    <head>        
+        <title>Upload</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>     
+        <link rel="stylesheet" href="../Home/Timeplan.css"/>
     </head>
-    <body>      
-        <h1>UPLOAD</h1>     
-        <div class="form1">
-            <input type="file" id="file1"/>
-            <button type="button" id="button1"> Reset</button>
-            <button type="button" id="button2"> Upload</button>    
+    <body>
+        <div class="form1" style="max-width: 1920px;">
+        <div align="center">     
+            <input type ="file" id="load_data" accept=".csv" class="btn btn-info">
         </div>
-    <div class="form2">
-            <h2>Emnekode m/versjon</h2> 
-            <h2>Emnekode n1</h2>
-            <h2>Emnekode n2</h2>
-            <h2>Emnekode n3</h2>
-            <h2>Termin/Semester</h2>
+        <br/>
+        <a href="../../home.html" class="button">Tilbake</a>
+        <div id="csv_table">
+        </div>
+        <script>
+            $('#load_data').change(function()
+            {
+                var rdr = new FileReader();
+                rdr.readAsText($('#load_data')[0].files[0]);
+                rdr.onload = function (e) 
+                {               
+                    //Put the data into an array and split it based on the newline character.
+                    var csv_data = e.target.result.split(/\n/);
+                    //I define a table that will later hold the csv data.
+                    var table_data = '<table class="table table-bordered table-striped">';
+                    //Loops thru the rows in csv_data.
+                    for(var count = 0; count<csv_data.length; count++)
+                    {
+                        //Puts the colums into an array by spliting the rows based on a ",".
+                        var cell_data = csv_data[count].split(",");
+                        //makes a new row for each value in csv_data
+                        table_data += '<tr>';
+                        //Loops thru the cell data.
+                        for(var cell_count=0; cell_count<cell_data.length; cell_count++)
+                        {
+                            //checks for first row values to deterin table header
+                            if(count === 0)
+                            {
+                                //first row values are made into headers
+                                table_data += '<th>'+cell_data[cell_count]+'</th>';
+                            }
+                            else
+                            {   
+                                //Everything else is made into a standard cell
+                                table_data += '<td>'+cell_data[cell_count]+'</td>';
+                            }
+                        }
+                    }
+                    $('#csv_table').html(table_data);
+                };             
+            }); 
+        </script>
         </div>
     </body>
 </html>

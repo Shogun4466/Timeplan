@@ -44,39 +44,51 @@ public class Query {
     }
     
     //Insert "objekter" inn i "table"
-    public void addBatch(String objekter, String table) throws SQLException {
+    public void addBatch(String objekter, String objektKomb, String table) throws SQLException {
         //try {
             con.setAutoCommit(false);
             PreparedStatement stmnt = null;
+            String sql = "INSERT INTO `"+table+"` VALUES ('"+objekter+"', '"+objektKomb+"');";
             //stmnt = con.prepareStatement("INSERT INTO `"+table+"` VALUES ('"+objekter+"');");
-            System.out.println("Table: "+table);
-            System.out.println("objekter: "+objekter);
+            //System.out.println("Table: "+table);
+            //System.out.println("objekter: "+objekter);
             //stmnt.setString(1, objekter);
-            stmnt = con.prepareStatement("INSERT INTO `"+table+"` VALUES ('"+objekter+"');");
-            stmnt.executeUpdate();
+            stmnt = (PreparedStatement) con.prepareStatement(sql);
+            stmnt.addBatch();
+            stmnt.execute();
+            //stmnt.executeUpdate();
             //this.stmnt.clearBatch();
         //} catch (BatchUpdateException ex) {
           //  Logger.getLogger(Reader.class.getName()).log(Level.SEVERE, null, ex);
         //}
     }
     
-    public void addBatchEmnekode(String objekt1, String objekt2, String table) throws SQLException {
+    public void addBatchEmnekode(String emnekode, String emnekomb, String emnekombniv2, String emnekombniv3, String emnekombniv4, String table, String table2, String table3, String table4, String table5) throws SQLException {
         con.setAutoCommit(false);
         PreparedStatement stmnt = null;
-        /*System.out.println("Table: "+table);
-        System.out.println("objekt1: "+objekt1);
-        System.out.println("Objekt2: "+objekt2);*/
-        stmnt = con.prepareStatement("INSERT INTO `"+table+"` VALUES ('"+objekt1+"', '"+objekt2+"');");
-        stmnt.executeUpdate();
+        stmnt = con.prepareStatement("INSERT INTO `"+table+"` VALUES ('"+emnekomb+"', '"+emnekode+"');");
+        stmnt.addBatch();
+        stmnt.executeBatch();
+        stmnt = con.prepareStatement("INSERT INTO `"+table3+"` VALUES ('"+emnekombniv2+"', '"+emnekomb+"');");
+        stmnt.addBatch();
+        stmnt.executeBatch();
+        stmnt = con.prepareStatement("INSERT INTO `"+table4+"` VALUES ('"+emnekombniv3+"', '"+emnekombniv2+"');");
+        stmnt.addBatch();
+        stmnt.executeBatch();
+        stmnt = con.prepareStatement("INSERT INTO `"+table5+"` VALUES ('"+emnekombniv4+"', '"+emnekombniv3+"');");
+        stmnt.addBatch();
+        stmnt.executeBatch();
+        con.setAutoCommit(true);
     }
     
     public void executeBatch() {
         try {
-            con.commit();
-            int[] updates = stmnt.executeBatch();
+            stmnt.execute();
+            //int[] updates = stmnt.executeBatch();
             con.commit();
             con.setAutoCommit(true);
-        } catch (Exception e) {
+        } catch (SQLException ex) {
+            Logger.getLogger(Reader.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -107,7 +119,9 @@ public class Query {
             if (rs != null) {
                 rs.close();
             }
-            stmnt.close();
+            if (stmnt != null)   {
+                stmnt.close();
+            }
             con.close();
             ctd.destroy();
         } catch (SQLException ex) {

@@ -142,6 +142,21 @@ public class Reader {
         int y=0;
         String objekter;
         String table;
+        String emnekode;
+        String emnekombniv2;
+        String emnekombniv3;
+        String emnekombniv4;
+        String emnekomb;
+        String emnekombinasjon;
+        String emnevalgsstatkode;
+        String semester;
+        String Studieprogramkode;
+        String terminnrDefault;
+        String terminnrRS;
+        String table2;
+        String table3;
+        String table4;
+        String table5;
         System.out.println("Antall rader: "+antRader+" og antall kolonner: "+antKoll+" og antall elementer: "+antElementer);
         //while (x < antElementer) {
             for (i=0; i < antKoll; i++)    {
@@ -149,20 +164,29 @@ public class Reader {
                 for (j=0; j < antRader; j++)    {
                     //HVIS DET ER FØRSTE RAD, SÅ MÅ VI LEGGE TING TIL PÅ EN LITT DUM MÅTE FORELØBIG:
                     if (i==0)   {
-                    String emnekode = listeUtifraKoll.get(i).get(j);
-                    //String emnekombkomb = listeUtifraKoll.get(i+1).get(j)+j;
-                    String emnekombkomb = "emnekomb:"+j;
+                    emnekode = listeUtifraKoll.get(i).get(j);
+                    emnekombniv2 = listeUtifraKoll.get(i+1).get(j)+j;
+                    emnekombniv3 = listeUtifraKoll.get(i+2).get(j)+j;
+                    emnekombniv4 = listeUtifraKoll.get(i+3).get(j)+j;
+                    emnekomb = "emnekomb"+j;
                     table = csvFRad.get(i);
-                    query.addBatchEmnekode(emnekode, emnekombkomb, table);
-                    y++;
+                    System.out.println(csvFRad.get(i));
+                    table2 = "Emne";
+                    table3 = csvFRad.get(i+1);
+                    table4 = csvFRad.get(i+2);
+                    table5 = csvFRad.get(i+3);
+                    query.addBatchEmnekode(emnekode, emnekomb, emnekombniv2, emnekombniv3, emnekombniv4, "emnekode m/versjon", table2, table3, table4, table5);
+                    y=y+6;
+                    //query.executeBatch();
                     System.out.println("Sucess nr: " + y);
                     }   
                     //HVIS DET IKKE ER FØRSTE RADEN:
                     else    {
                     objekter = listeUtifraKoll.get(i).get(j);
                     table = csvFRad.get(i);
-                    query.addBatch(objekter, table);
-                    //query.executeBatch();
+                    emnekomb = "emnekomb"+j;
+                    query.addBatch(objekter, emnekomb, table);
+                    query.executeBatch();
                     y++;
                     System.out.println("Sucess nr: " + y);
                     }

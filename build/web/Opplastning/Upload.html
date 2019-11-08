@@ -2,13 +2,15 @@
     <head>        
         <title>Upload</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>     
-        <link rel="stylesheet" href="Upload.css" type="text/css"/>
+        <link rel="stylesheet" href="../Home/Timeplan.css"/>
     </head>
-    <body>           
+    <body>
+        <div class="form1" style="max-width: 1920px;">
         <div align="center">     
             <input type ="file" id="load_data" accept=".csv" class="btn btn-info">
         </div>
         <br/>
+        <a href="../../home.html" class="button">Tilbake</a>
         <div id="csv_table">
         </div>
         <script>
@@ -49,5 +51,6 @@
                 };             
             }); 
         </script>
+        </div>
     </body>
 </html>
