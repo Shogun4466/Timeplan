@@ -5,51 +5,58 @@ use Timeplan;
 
 CREATE TABLE IF NOT EXISTS Studieprogram (
 Studieprogram VARCHAR(45) NOT NULL,
-PRIMARY KEY (Studieprogram)
+Emnekomb varchar(45) NOT NULL,
+PRIMARY KEY (Studieprogram, Emnekomb)
 );
-CREATE TABLE IF NOT EXISTS `Emnekode m/versjon` (
-EmneValg VARCHAR(45) NOT NULL,
-PRIMARY KEY (EmneValg)
+
+CREATE TABLE IF NOT EXISTS `emnekode m/versjon` (
+Emnekomb VARCHAR(45),
+EmnekombinasjonNavn VARCHAR(45) NOT NULL,
+PRIMARY KEY (EmnekombinasjonNavn, Emnekomb)
 );
 CREATE TABLE IF NOT EXISTS `Terminnr DEFAULT` (
-Terminnr INT NOT NULL,
-Årstid VARCHAR(4) NOT NULL,
-PRIMARY KEY (Terminnr, Årstid)
+Terminnr VARCHAR(2) NOT NULL,
+Studieprogram VARCHAR(45) NOT NULL,
+PRIMARY KEY (Terminnr, Studieprogram)
+);
+
+CREATE TABLE IF NOT EXISTS `TERMINNR_RELATIV_START2` (
+Terminnr VARCHAR(2) NOT NULL,
+Studieprogram VARCHAR(45) NOT NULL,
+PRIMARY KEY (Terminnr, Studieprogram)
 );
 
 CREATE TABLE IF NOT EXISTS `Emnekombinasjon` (
-EmnekombinasjonNavn VARCHAR(45) NOT NULL,
 Studieprogram VARCHAR(45) NOT NULL,
-EmneValg VARCHAR(45) NOT NULL,
+Emnekombkomb varchar(45) NOT NULL,
+/*EmnevalgKode VARCHAR(45) NOT NULL,
 Terminnr INT NOT NULL,
-Årstid VARCHAR(4) NOT NULL,
-PRIMARY KEY (EmnekombinasjonNavn),
-CONSTRAINT fk_emnekombinasjon_studieprogram FOREIGN KEY (Studieprogram) REFERENCES Studieprogram (Studieprogram),
-CONSTRAINT fk_emnekombinasjon_emnevalg FOREIGN KEY (EmneValg) REFERENCES `Emnekode m/versjon` (EmneValg),
-CONSTRAINT fk_emnekombinasjon_termin FOREIGN KEY (Terminnr, Årstid) REFERENCES `Terminnr DEFAULT` (Terminnr, Årstid)
-);
-CREATE TABLE IF NOT EXISTS `Emnekombkomb` (
-EmnekombinasjonNavn VARCHAR(45) not null,
-EmnekombinasjonNavn1 VARCHAR(45) NOT NULL,
-PRIMARY KEY (EmnekombinasjonNavn, EmnekombinasjonNavn1),
-CONSTRAINT fk_emnekombinasjon_emnekombinasjon FOREIGN KEY (EmnekombinasjonNavn) REFERENCES `Emnekombinasjon` (EmnekombinasjonNavn),
-CONSTRAINT fk_emnekombinasjon_emnekombinasjon1 FOREIGN KEY (EmnekombinasjonNavn1) REFERENCES `Emnekomb nivå 2` (EmnekombinasjonNavn1)
+Årstid VARCHAR(4) NOT NULL,*/
+PRIMARY KEY (Studieprogram, emnekombkomb)
 );
 CREATE TABLE IF NOT EXISTS `Emnekomb nivå 2` (
 EmnekombinasjonNavn2 VARCHAR(45) not null,
-EmnekombinasjonNavn1 VARCHAR(45) not null,
-PRIMARY KEY (EmnekombinasjonNavn2),
-CONSTRAINT fk_emnekombinasjon_emnekombinasjon2 FOREIGN KEY (EmnekombinasjonNavn1) REFERENCES `Emnekomb nivå 3` (EmnekombinasjonNavn1)
+Emnekombkomb VARCHAR(45) not null,
+PRIMARY KEY (EmnekombinasjonNavn2)
 );
 CREATE TABLE IF NOT EXISTS `Emnekomb nivå 3` (
 EmnekombinasjonNavn3 VARCHAR(45) not null,
 EmnekombinasjonNavn2 VARCHAR(45) not null,
-PRIMARY KEY (EmnekombinasjonNavn3),
-CONSTRAINT fk_emnekombinasjon_emnekombinasjon3 FOREIGN KEY (EmnekombinasjonNavn2) REFERENCES Emnekombinasjon2 (EmnekombinasjonNavn2)
+PRIMARY KEY (EmnekombinasjonNavn3)
 );
 CREATE TABLE IF NOT EXISTS `Emnekomb nivå 4` (
 EmnekombinasjonNavn4 VARCHAR(45) not null,
 EmnekombinasjonNavn3 VARCHAR(45) not null,
-PRIMARY KEY (EmnekombinasjonNavn4),
-CONSTRAINT fk_emnekombinasjon_emnekombinasjon4 FOREIGN KEY (EmnekombinasjonNavn3) REFERENCES Emnekombinasjon3 (EmnekombinasjonNavn3)
+PRIMARY KEY (EmnekombinasjonNavn4)
+);
+
+CREATE TABLE IF NOT EXISTS `EMNEVALGSTATKODE` (
+EmnevalgKode VARCHAR(20) NOT NULL,
+Emnekombkomb VARCHAR(45) NOT NULL,
+PRIMARY KEY (EmnevalgKode, Emnekombkomb)
+);
+CREATE TABLE IF NOT EXISTS `Semester` (
+Årstid VARCHAR(6) NOT NULL,
+Emnekombkomb VARCHAR(45) NOT NULL,
+PRIMARY KEY (Årstid, Emnekombkomb)
 );

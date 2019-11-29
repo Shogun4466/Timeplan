@@ -42,49 +42,42 @@ public class Query {
             Logger.getLogger(Reader.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    //Insert "objekter" inn i "table"
+
+    //Legger inn "objekter" /m objektkombinasjonen inn i "table"
     public void addBatch(String objekter, String objektKomb, String table) throws SQLException {
-        //try {
-            con.setAutoCommit(false);
-            PreparedStatement stmnt = null;
-            String sql = "INSERT INTO `"+table+"` VALUES ('"+objekter+"', '"+objektKomb+"');";
-            //stmnt = con.prepareStatement("INSERT INTO `"+table+"` VALUES ('"+objekter+"');");
-            //System.out.println("Table: "+table);
-            //System.out.println("objekter: "+objekter);
-            //stmnt.setString(1, objekter);
-            stmnt = (PreparedStatement) con.prepareStatement(sql);
-            stmnt.addBatch();
-            stmnt.execute();
-            //stmnt.executeUpdate();
-            //this.stmnt.clearBatch();
-        //} catch (BatchUpdateException ex) {
-          //  Logger.getLogger(Reader.class.getName()).log(Level.SEVERE, null, ex);
-        //}
-    }
-    
-    public void addBatchEmnekode(String emnekode, String emnekomb, String emnekombniv2, String emnekombniv3, String emnekombniv4, String table, String table2, String table3, String table4, String table5) throws SQLException {
         con.setAutoCommit(false);
         PreparedStatement stmnt = null;
-        stmnt = con.prepareStatement("INSERT INTO `"+table+"` VALUES ('"+emnekomb+"', '"+emnekode+"');");
-        stmnt.addBatch();
-        stmnt.executeBatch();
-        stmnt = con.prepareStatement("INSERT INTO `"+table3+"` VALUES ('"+emnekombniv2+"', '"+emnekomb+"');");
-        stmnt.addBatch();
-        stmnt.executeBatch();
-        stmnt = con.prepareStatement("INSERT INTO `"+table4+"` VALUES ('"+emnekombniv3+"', '"+emnekombniv2+"');");
-        stmnt.addBatch();
-        stmnt.executeBatch();
-        stmnt = con.prepareStatement("INSERT INTO `"+table5+"` VALUES ('"+emnekombniv4+"', '"+emnekombniv3+"');");
+        stmnt = con.prepareStatement("INSERT IGNORE INTO `" + table + "` VALUES ('" + objekter + "', '" + objektKomb + "');");
         stmnt.addBatch();
         stmnt.executeBatch();
         con.setAutoCommit(true);
     }
-    
+
+    //Samme som den over, men for kolonne 0-6 (A-G i excel). 
+    //Benyttet Batch innsetning, men MySQL bug forårsaker at batches kan kun commites en av gangen, hvilket
+    //fjerner hensikten, men er like effektivt som om det hadde vært vanlig string innsetning.
+    public void addBatchEmnekode(String emnekode, String emnekomb, String emnekombniv2, String emnekombniv3, String emnekombniv4, String table, String table2, String table3, String table4, String table5) throws SQLException {
+        con.setAutoCommit(false);
+        PreparedStatement stmnt = null;
+        stmnt = con.prepareStatement("INSERT IGNORE INTO `" + table + "` VALUES ('" + emnekomb + "', '" + emnekode + "');");
+        stmnt.addBatch();
+        stmnt.executeBatch();
+        stmnt = con.prepareStatement("INSERT IGNORE INTO `" + table3 + "` VALUES ('" + emnekombniv2 + "', '" + emnekomb + "');");
+        stmnt.addBatch();
+        stmnt.executeBatch();
+        stmnt = con.prepareStatement("INSERT IGNORE INTO `" + table4 + "` VALUES ('" + emnekombniv3 + "', '" + emnekombniv2 + "');");
+        stmnt.addBatch();
+        stmnt.executeBatch();
+        stmnt = con.prepareStatement("INSERT IGNORE INTO `" + table5 + "` VALUES ('" + emnekombniv4 + "', '" + emnekombniv3 + "');");
+        stmnt.addBatch();
+        stmnt.executeBatch();
+        con.setAutoCommit(true);
+    }
+
     public void executeBatch() {
         try {
             stmnt.execute();
-            //int[] updates = stmnt.executeBatch();
+            //int[] updates = stmnt.executeBatch();     //Skulle vært inkludert med batch innsetning, for å commite hele listen av batches.
             con.commit();
             con.setAutoCommit(true);
         } catch (SQLException ex) {
@@ -119,7 +112,7 @@ public class Query {
             if (rs != null) {
                 rs.close();
             }
-            if (stmnt != null)   {
+            if (stmnt != null) {
                 stmnt.close();
             }
             con.close();
